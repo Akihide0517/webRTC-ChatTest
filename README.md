@@ -3,7 +3,7 @@ htmlはホスト側(client2.html)から順番に起動して下さい。
 
 localhostはサーバーのipに書き換えて下さい。
 
-google chrome出ないと動作できません.
+google chrome出ないと動作できません.(可能ならchromium)
 
 どうにもサーバー側でwifiを二つ認識してしまう場合があるようです。
 そのような場合、SSIDが両者ともに本当に同じものであるのか確かめて下さい。
