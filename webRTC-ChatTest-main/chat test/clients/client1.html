@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join User</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 80px); /* ボタンの幅を除いた幅 */
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        input[type="button"] {
+            width: 70px;
+            padding: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Join User</h1>
+            <table id="conversationTable">
+                <tr>
+                    <th>送信者</th>
+                    <th>メッセージ</th>
+                </tr>
+            </table>
+        </div>
+        <div class="footer">
+            <input type="text" id="messageInput" placeholder="メッセージを入力してください">
+            <input type="button" value="送信" onclick="sendMessage()">
+        </div>
+    </div>
+
+    <!-- 仮の例: 実際のファイルやディレクトリ構造に合わせて変更が必要です -->
+    <script src="./peerjs-master/peerjs.min.js"></script>
+    <script>
+        const peer = new Peer('client1', {
+            host: '192.168.10.163',
+            port: 9000,
+            path: '/'
+        });
+
+        const conn = peer.connect('client2');
+
+        conn.on('open', () => {
+            console.log('client2に接続できました。');
+            conn.send('参加者ー接続完了');
+            conn.on('data', data => {
+                console.log(`受信したデータ：${data}`);
+                appendMessage('client2', data);
+            });
+        });
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            conn.send(message);
+            console.log(`メッセージを送信しました：${message}`);
+            appendMessage('client1', message);
+            messageInput.value = ''; // 送信後、テキストフィールドをクリアする
+        }
+
+        function appendMessage(sender, message) {
+            const table = document.getElementById('conversationTable');
+            const row = table.insertRow(-1);
+            const senderCell = row.insertCell(0);
+            const messageCell = row.insertCell(1);
+            senderCell.textContent = sender;
+            messageCell.textContent = message;
+        }
+    </script>
+</body>
+</html>
