@@ -83,11 +83,16 @@
         });
 
         let connect;
+        var mode = true;
 
         peer.on('connection', conn => {
             console.log('他のクライアントからの接続あり');
             connect = conn;
             conn.on('data', data => {
+                if(mode){
+                    connect.send("接続が認証されました");
+                    mode = false;
+                }
                 appendMessage('client1', data);
             });
         });
