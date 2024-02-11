@@ -77,11 +77,15 @@
     <!-- 仮の例: 実際のファイルやディレクトリ構造に合わせて変更が必要です -->
     <script src="./peerjs-master/peerjs.min.js"></script>
     <script>
-        const peer = new Peer('client1', {
-            host: '192.168.10.163',
-            port: 9000,
-            path: '/'
-        });
+    const peer = new Peer('client1', {
+        host: '192.168.10.163',
+        port: 9000,
+        path: '/',
+        reconnect: {
+            attempts: 10, // 任意の再試行回数
+            delay: 5000, // 再試行の間隔（ミリ秒）
+        }
+    });
 
         const conn = peer.connect('client2');
 
@@ -93,6 +97,17 @@
                 appendMessage('client2', data);
             });
         });
+
+        function checkConnection() {
+            if (conn.open) {
+                console.log('client2に接続できました。');
+            } else {
+                console.log('client2にまだ接続していません。再試行します。');
+                setTimeout(checkConnection, 5000); // 5秒ごとに再試行
+            }
+        }
+
+        conn.on('open', checkConnection);
 
         function sendMessage() {
             const messageInput = document.getElementById('messageInput');
