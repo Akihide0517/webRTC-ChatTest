@@ -1,5 +1,7 @@
 **注意事項**
-hostはサーバーのipに書き換えて下さい。
+htmlはホスト側(client2.html)から順番に起動して下さい。
+
+localhostはサーバーのipに書き換えて下さい。
 
 google chrome出ないと動作できません.
 
